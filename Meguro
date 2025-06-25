@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meguro Campus Virtual Tour</title>
+    <!-- Load Pannellum CSS from cdnjs -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pannellum/2.5.6/pannellum.css" />
+    <!-- Load Open Sans font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Load Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f3f4f6;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .viewer-container {
+            position: relative;
+            width: 100%;
+            max-width: 64rem;
+            height: 400px;
+            margin-bottom: 2rem;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #d1d5db;
+        }
+
+        .splash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            z-index: 10;
+            border-radius: 0.5rem;
+        }
+
+        .splash h2 {
+            margin-bottom: 1rem;
+            font-size: 14px; /* Changed to 14px */
+            font-weight: bold;
+            line-height: 1.3;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .splash p {
+            margin-bottom: 1.5rem;
+            font-size: 14px; /* Changed to 14px */
+            opacity: 0.9;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .splash button {
+            border: none;
+            padding: 0.625rem 1.25rem;
+            font-size: 14px; /* Changed to 14px */
+            color: white;
+            border-radius: 0.625rem;
+            background: linear-gradient(90deg, rgba(107, 182, 71, 0.80) 9%, rgba(37, 163, 75, 0.90) 66%);
+            cursor: pointer;
+            transition: opacity 0.2s ease-in-out;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .splash button:hover {
+            opacity: 0.9;
+        }
+
+        .pnlm-hotspot span {
+            visibility: visible !important;
+            font-size: 0.7em;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-shadow: 0 0 3px rgba(0,0,0,0.8);
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .scene-selector {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 12;
+        }
+
+        .scene-selector select {
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Open Sans', sans-serif;
+            min-width: 180px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 8px top 50%;
+            background-size: 16px;
+        }
+
+        .scene-selector select:hover,
+        .scene-selector select:focus {
+            background: rgba(0,0,0,0.8);
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="text-3xl font-bold text-gray-800 mb-6 mt-4 rounded-lg bg-white p-4 shadow-md w-full max-w-4xl text-center" style="font-family: 'Open Sans', sans-serif;">Meguro Campus Virtual Tour</h1>
+    <div class="viewer-container" id="container-meguro">
+        <div id="Meguro" style="width: 100%; height: 100%;"></div>
+        <div class="scene-selector" id="selector-meguro">
+            <select aria-label="Choose a room for Meguro Campus"></select>
+        </div>
+        <div class="splash" id="splash-meguro">
+            <h2>Welcome to Aoba-Japan International School — Meguro Campus</h2>
+            <p>Explore our vibrant campus spaces in this virtual tour.<br>Use swipe, click, or the room list to navigate.</p>
+            <button onclick="enterTour('meguro')">Enter Tour</button>
+        </div>
+    </div>
+
+    <!-- Load Pannellum JavaScript from CDN -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+
+    <script>
+        document.oncontextmenu = document.body.oncontextmenu = function() { return false; };
+
+        const viewerMeguro = pannellum.viewer('Meguro', {
+            "default": {
+                "firstScene": "1F",
+                "sceneFadeDuration": 1000,
+                "autoLoad": true,
+                "showFullscreenCtrl": true,
+                "showSceneName": false,
+                "crossOrigin": "anonymous",
+                "showAbout": false
+            },
+            "scenes": {
+                "1F": {
+                    "title": "Meguro Level 1 Classroom",
+                    "type": "equirectangular",
+                    "compass": true,
+                    "northOffset": 0,
+                    "panorama": "https://www.japaninternationalschool.com/wp-content/uploads/2024/08/Aoba360_Meguro_LargeRoom1R.jpg",
+                    "hotSpots": [
+                        {
+                            "pitch": 0,
+                            "yaw": -150,
+                            "type": "scene",
+                            "text": "Meguro Level 2 Classroom ↑",
+                            "sceneId": "2F"
+                        }
+                    ]
+                },
+                "2F": {
+                    "title": "Meguro Level 2 Classroom",
+                    "type": "equirectangular",
+                    "compass": true,
+                    "northOffset": 0,
+                    "panorama": "https://www.japaninternationalschool.com/wp-content/uploads/2024/08/Aoba360_Meguro_Sunflower2R.jpg",
+                    "hotSpots": [
+                        {
+                            "pitch": 0,
+                            "yaw": 23,
+                            "type": "scene",
+                            "text": "Meguro Level 1 Classroom ↓",
+                            "sceneId": "1F"
+                        }
+                    ]
+                }
+            }
+        });
+
+        function enterTour(campus) {
+            const splash = document.getElementById(`splash-${campus}`);
+            if (!splash) return;
+            splash.style.display = 'none';
+        }
+
+        function populateSceneSelector(viewer, selectorId, orderArray) {
+            const selectorDiv = document.getElementById(selectorId);
+            if (!selectorDiv) return;
+
+            const select = selectorDiv.querySelector('select');
+            const scenes = viewer.getConfig().scenes;
+            select.innerHTML = '';
+
+            const sortedScenes = Object.keys(scenes)
+                .map(sceneId => ({ id: sceneId, title: scenes[sceneId].title || sceneId }))
+                .sort((a, b) => {
+                    const indexA = orderArray.indexOf(a.title);
+                    const indexB = orderArray.indexOf(b.title);
+                    if (indexA === -1 && indexB === -1) return 0;
+                    if (indexA === -1) return 1;
+                    if (indexB === -1) return -1;
+                    return indexA - indexB;
+                });
+
+            sortedScenes.forEach(scene => {
+                const option = document.createElement('option');
+                option.value = scene.id;
+                option.text = scene.title;
+                select.appendChild(option);
+            });
+
+            select.value = viewer.getScene();
+            select.addEventListener('change', (e) => {
+                const sceneId = e.target.value;
+                viewer.loadScene(sceneId);
+            });
+            viewer.on('scenechange', () => {
+                select.value = viewer.getScene();
+            });
+        }
+
+        const meguroOrder = [
+            "Meguro Level 1 Classroom", "Meguro Level 2 Classroom"
+        ];
+        populateSceneSelector(viewerMeguro, 'selector-meguro', meguroOrder);
+    </script>
+
+</body>
+</html>
